@@ -22,10 +22,10 @@ contract LoanCreator is Ownable, Pausable {
                 _loanAmount,
                 duration,
                 loanMeta,
-                0,
-                address(0),
-                0,
-                0,
+                0, //interest
+                address(0), //collateral addresss
+                0, // collatral amount
+                0, // collatral Eth price
                 0,
                 address(0),
                 msg.sender,
@@ -35,6 +35,37 @@ contract LoanCreator is Ownable, Pausable {
 
         loans.push(_loanContract);
         emit LoanCreated(msh.sender, _loanContract);
+
+        return _loanContractAddress;
+    }
+
+    function requestNewLoan(
+        uint256 _loanAmount,
+        uint128 duration,
+        uint256 _interest,
+        address _collateralAddress,
+        uint256 _collateralAmount,
+        uint256 _collateralPriceInETH
+    ) public returns (address _loanContract) {
+        _loanContractAddress = address(
+            new LoanContract(
+                _loanAmount,
+                _duration,
+                "", //meta data
+                _interest,
+                _collateralAddress,
+                _collateralAmount,
+                _collateralPriceInETH,
+                50,
+                msg.sender,
+                address(0),
+                LoanContract.LoanStatus.REQUEST
+            )
+        );
+
+        loans.push(_loanContractAddress);
+
+        emit LoanRequestCreated(msg.sender, _loanContractAddress);
 
         return _loanContractAddress;
     }
