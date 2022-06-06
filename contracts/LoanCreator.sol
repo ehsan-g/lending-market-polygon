@@ -7,10 +7,10 @@ import "./LoanContract.sol";
 
 contract LoanCreator is Ownable, Pausable {
     address[] public loans;
+    event LoanCreated(address, address);
+    event LoanRequesd(address, address);
 
     constructor() public {}
-
-    event LoanCreated(address, address);
 
     function createNewLoanOffer(
         uint256 _loanAmount,
@@ -65,7 +65,7 @@ contract LoanCreator is Ownable, Pausable {
 
         loans.push(_loanContractAddress);
 
-        emit LoanRequestCreated(msg.sender, _loanContractAddress);
+        emit LoanRequested(msg.sender, _loanContractAddress);
 
         return _loanContractAddress;
     }
